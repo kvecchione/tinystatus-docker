@@ -7,7 +7,8 @@ data:
   checks.csv: |
     http,200,Google,https://google.com
     ping,0,Google ping,8.8.8.8
-  incidents.txt: ''
+  incidents.txt: 
+    No open incidents.
 ---
 apiVersion: apps/v1
 kind: Deployment
