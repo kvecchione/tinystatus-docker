@@ -27,6 +27,8 @@ spec:
       - image: kvecchione/tinystatus:latest
         imagePullPolicy: Always
         name: tinystatus
+        ports:
+        - containerPort: 8080
         volumeMounts:
         - mountPath: /config
           name: tinystatus-config
@@ -34,3 +36,33 @@ spec:
       - name: tinystatus-config
         configMap:
           name: tinystatus-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tinystatus
+spec:
+  selector:
+    app: tinystatus
+  ports:
+  - port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tinystatus
+spec:
+  tls:
+  - hosts:
+    - status.domain.com
+  rules:
+  - host: status.domain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tinystatus
+            port:
+              number: 8080
