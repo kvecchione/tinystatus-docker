@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tinystatus-config
+data:
+  checks.csv: |
+    http,200,Google,https://google.com
+    ping,0,Google ping,8.8.8.8
+  incidents.txt: ''
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tinystatus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tinystatus
+  template:
+    metadata:
+      labels:
+        app: tinystatus
+    spec:
+      containers:
+      - image: kvecchione/tinystatus:latest
+        imagePullPolicy: Always
+        name: tinystatus
+        volumeMounts:
+        - mountPath: /config
+          name: tinystatus-config
+      volumes:
+      - name: tinystatus-config
+        configMap:
+          name: tinystatus-config

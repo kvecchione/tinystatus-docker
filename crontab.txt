@@ -1,0 +1,1 @@
+* * * * * sh /srv/generate_status.sh 2> /proc/1/fd/1
